@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="FR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+		<title>Garage with a Vue</title>
+	</head>
+	<body>
+		<div id="app" >
+			<h1 class="font-semibold text-3xl text-center mt-6">{{garageName}} </h1>
+			<p class="text-center mt-6 ">
+				Bienvenue dans au {{garageName}} ! 				
+				Apple pie jelly beans chupa chups topping gingerbread marzipan. Jelly cake tootsie roll chocolate cake danish biscuit.
+				Cupcake cake apple pie ice cream donut sweet roll candy. Pudding oat cake topping. 
+				Pudding wafer cake ice cream jujubes marzipan cake. Pie macaroon pastry jelly-o jelly candy. 
+			</p>
+			<section >
+				<h2 class="text-center mt-6 text-3xl ">Articles</h2>
+				<div class="flex justify-center ">
+					<img
+						width="300"
+						height="150"
+						src="https://via.placeholder.com/300x150"
+						alt=""
+					/>
+					<div class="mt-8  ml-8">
+						<h3>Nom de l'article</h3>
+						<p>En stock</p>
+						<p>En rupture de stock</p>
+						<div class="flex flex-col items-center mt-6 ">
+							<label for="add-item-quantity">Quantité :</label>
+							<input id="add-item-quantity" type="number" class="border-2 border-blue-200 rounded"/>
+							<button class=" font-semibold mt-6 border-2 hover:border-blue-300 hover:bg-white hover:text-black text-white w-64 rounded bg-blue-400">Ajouter au panier d'achat</button>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<aside class="text-center mt-6 text-2xl">
+				<h2>Panier d'achat: 0 articles</h2>
+			</aside>
+
+            <h2 class="text-center mt-6 text-2xl" >Contactez nous</h2>
+			<p class="text-center mt-2 ">Adresse : {{address}} </p>
+			<p class="text-center mt-2 ">Téléphone : {{phone}}</p>
+			<p class="text-center mt-2 ">Email : {{email}}</p>
+			<p class="text-center mt-4 text-xl">Horaires :</p>
+			<ul class="text-center mt-4 ">
+				<li>L-V: 08:00 à 19:00</li>
+				<li>Samedi: 09:00 à 19:00</li>
+			</ul>
+			<footer class="text-center mt-8">
+				<p>{{footerCopyright}}</p>
+			</footer>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script>
+			const app = new Vue({
+				el:"#app",
+				data :{
+					address: "18 avenue de la roue, Lille, France",
+					email: "hello@garagedurant.fr",
+					phone: "01 59 59 59 59",
+					garageName :"Garage Durant",
+					shoppingCart: 0,
+					simpleArticles: [
+						{
+							name: "Freins Céramique",
+							image: {
+								source: "https://www.piecesauto-pro.fr/magazine/wp-content/uploads/2020/01/Keramische-Bremsbel%C3%A4ge-1.jpg",
+								alt: "Des freins céramique"
+							},
+							inStock: true,
+							quantity: 1
+						},
+						{
+							name: "Essuis Glace Bosh",
+							image: {
+								source: "https://media.centrakor.com/catalog/product/cache/image/800x800/0ee134d6d987b4a4dd752d2524c88dff/b/a/balai-essuie-glace-12-pouces-30cm-247535_247535_DEB_WEB.JPG",
+								alt: "Essuis Glace Bosh"
+							},
+							inStock: true,
+							quantity: 1
+						},
+						{
+							name: "Huile Moteur",
+							image: {
+								source: "https://www.oreca-store.com/blog/wp-content/uploads/2019/05/20952739_l-1288x724.jpg",
+								alt: "Huile Moteur"
+							},
+							inStock: false,
+							quantity: 1
+						}
+					]
+				},
+                computed:{
+                    footerCopyright(){
+                        const currentYear = new Date().getFullYear();
+
+                        return `Copyright ${this.garageName} ${currentYear}`
+                    }
+                }
+			})
+		</script>
+	</body>
+</html>

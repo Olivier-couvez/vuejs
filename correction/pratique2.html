@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="FR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+		<title>Garage with a Vue</title>
+	</head>
+	<body>
+		<div id="app" >
+			<h1 class="font-semibold text-3xl text-center mt-6">{{garageName}} </h1>
+			<p class="text-center mt-6 ">
+				Bienvenue dans au {{garageName}} ! 				
+				Apple pie jelly beans chupa chups topping gingerbread marzipan. Jelly cake tootsie roll chocolate cake danish biscuit.
+				Cupcake cake apple pie ice cream donut sweet roll candy. Pudding oat cake topping. 
+				Pudding wafer cake ice cream jujubes marzipan cake. Pie macaroon pastry jelly-o jelly candy. 
+			</p>
+            <h2 class="text-center mt-6 text-2xl" >Contactez nous</h2>
+			<p class="text-center mt-2 ">Adresse : {{address}} </p>
+			<p class="text-center mt-2 ">Téléphone : {{phone}}</p>
+			<p class="text-center mt-2 ">Email : {{email}}</p>
+			<p class="text-center mt-4 text-xl">Horaires :</p>
+			<ul class="text-center mt-4 ">
+				<li>L-V: 08:00 à 19:00</li>
+				<li>Samedi: 09:00 à 19:00</li>
+			</ul>
+			<footer class="text-center mt-8">
+				<p>{{footerCopyright}}</p>
+			</footer>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script>
+			const app = new Vue({
+				el:"#app",
+				data :{
+					address: "77 rue de l'égalité , Lille",
+					email: "mail@garagedurant.fr",
+					phone: "01 59 59 59 59",
+					garageName :"Garage Durant avec vue"
+				},
+                computed:{
+                    footerCopyright(){
+                        const currentYear = new Date().getFullYear();
+
+                        return `Copyright ${this.garageName} ${currentYear}`
+                    }
+                }
+			})
+		</script>
+	</body>
+</html>
