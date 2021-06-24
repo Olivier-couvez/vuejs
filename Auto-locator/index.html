@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoLocator.con</title>
+    <!-- IMPORT CSS -->
+    <style>@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');</style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&display=swap');</style>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="CSS\CssPerso.css">
+    <!-- IMPORT JS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <!-- DEMARRAGE VUE APPLICATION -------------------------------------------------------------------------------------------->
+    <!-- DEMARRAGE VUE APPLICATION -------------------------------------------------------------------------------------------->
+    <div class="container-app">
+        <div id="appVue">
+            <!-- HEADER -->
+            <nav>
+                <!-- LOGO MARQUE -->
+                <div id="nav-container">
+                    <div id="logo">
+                        <router-link to="/">
+                            <img src="IMG\aLogo.png" alt="logo de vue.js"><span id="marque">AutoLocator.con</span>
+                        </router-link>
+                    </div>
+                </div>
+                <!-- MENU PRINCIPAL ------------------------------------------------------------------------------------------->
+                <!-- MENU PRINCIPAL ------------------------------------------------------------------------------------------->
+                <ul id="icons">
+                    <li class="custom-btn">
+                        <router-link to="/liste-de-souhait">
+                            <i class="fas fa-heart"></i>Proposer votre véhicule
+                        </router-link>
+                    </li>
+                    <li class="custom-btn">
+                        <router-link to="/liste-de-souhait">
+                            <i class="fas fa-heart"></i>
+                            <span id="favori-notif"></span>Liste de souhait
+                        </router-link>
+                    </li>
+                    <li class="custom-btn">
+                        <router-link to="/liste-de-souhait">
+                            <i class="fas fa-heart"></i>Trouver un véhicule
+                        </router-link>
+                    </li>
+                </ul>          
+            </nav>
+            <router-view></router-view><!-- on instancie le routeur du menu--->
+        </div>
+        <!-- INITIALISATION DES COMPOSANTS UTILISES AU LONG DE LA PAGE   ------------------------------------------------------>
+        <script type="text/x-template" id="accueil">
+        <!-- CONNEXION--------------------------------------------------------------------------------------------------------->
+        <div class="home-container">
+            <form id="appConnexion" @submit="checkForm" action="#/user-settings" method="post" novalidate="false">            
+                <p v-if="erreurs.length">
+                    <b>SVP corrigez les erreur(s) suivante(s):</b>
+                    <ul>
+                    <li v-for="erreur in erreurs">{{ erreur }}</li>
+                    </ul>
+                </p>                
+                <p><label for="email">AdresseMail :</label>
+                <input type="email" name="AdresseMail" id="AdresseMail" v-model="AdresseMail"></p>
+
+                <p><label for="motDePasse">Mot de passe :</label>
+                <input type="text" name="motDePasse" id="motDePasse" v-model="motDePasse"></p>
+
+                <!-- @click="PersisterUtilisateur" -->
+                <p><input type="submit" value="Valider"></p>
+            </form>
+            <!-- PAGE --------------------------------------------------------------------------------------------------------->
+            <!-- PAGE --------------------------------------------------------------------------------------------------------->
+            <h1>Tout les Véhicules disponibles à la location :</h1>
+
+            <!-- AFFICHAGE RECHERCHES------------------------------------------------------------------------------------------>
+            <!-- AFFICHAGE RECHERCHES------------------------------------------------------------------------------------------>
+            <div id="container-recherche">
+                <!-- RECHERCHE display par MARQUE ------------------>
+                <label for="selectMarque">Filtrer par Marque :</label>
+                <select id="selectMarque" v-model="searchMarque" type="search" name="listeMarque">
+                    <option value="">Tout</option>
+                    <option v-for="marque in marques" :value="marque">{{marque}}</option>
+
+                </select>
+                <!-- RECHERCHE display par TYPE ------------------->
+                <label for="selectType">Filtrer par Type :</label>
+                <select id="selectType" v-model="searchType" type="search" name="listeType">
+                    <option value="">Tout</option>
+                    <option v-for="type in types" :value="type">{{type}}</option>                      
+                </select>
+                <!-- RECHERCHE display par DEPARTEMENT ----------->
+                <label for="selectDepartement">Filtrer par Departement :</label>
+                <select id="selectDepartement" v-model="searchDepartement" type="search" name="listeDepartement">
+                    <option value="">Tout</option>
+                    <option v-for="departement in departements" :value="departement">{{departement}}</option>
+                </select>
+                <div class="container-search-2">
+                    <!-- RECHERCHE display par MOT CLE  ---------------------->
+                    <input v-model="searchKey" type="search" id="search" placeholder="Rechercher par mot clé :" autocomplete="off">
+                    <!--  RECHERCHE display par PRIX MINI   -->
+                    <label for="prixMini">Prix MINI : <span> {{prixMini}} €</span></label>
+                    <input class="custom-slider" id="prixMini" v-model="prixMini" type="range" min="11" max="199" value="1" step="1" name="prixMini" list="prixMinis">
+                    <datalist id="prixMinis"></datalist>
+                    <!--  RECHERCHE display par PRIX MAXI   -->
+                    <label for="prixMaxi">Prix MAXI : <span> {{prixMaxi}} €</span></label>
+                    <input class="custom-slider" id="prixMaxi" v-model="prixMaxi" type="range" min="12" max="200" value="1" step="1" name="prixMaxi" list="prixMaxis">
+                    <datalist id="prixMaxis"></datalist><hr/>
+                    <!-- REPONSE EN FONCTION DU NOMBRE DE PRODUIT TROUVE -->
+                    <div v-if="filteredListTotal.length >= 1">Résultat de la recherche : nous avons trouvé {{filteredListTotal.length}} véhicule<span v-if="filteredListTotal.length >= 2">s</span> !</div>
+                    <div class="noResult" v-if="filteredListTotal.length < 1">Nous n'avons pas trouvé de véhicule ayant ces critères!</div>
+                </div>
+            </div>
+
+            <!-- AFFICHAGE DES PRODUITS --------------------------------------------------------------------------------------->
+            <!-- AFFICHAGE DES PRODUITS --------------------------------------------------------------------------------------->
+            <div class="card-cart-container">
+                <div class="card-container">
+
+                    <div v-for="produit in filteredListTotal" class="card">
+                        <span class="departement">Département : {{produit.departement}}</span>
+
+                        <div class="img-container">                        
+                            <img v-bind:src="produit.img" alt="Vehicule">
+                        </div>
+
+                        <div class="card-text">
+                            <h2>{{produit.description}}</h2>
+                            <p class="type">{{ produit.type }}</p>
+                            <span>{{produit.prix}}€</span>
+                        </div>
+
+                        <div class="card-icons">
+                            <div class="like-container">
+                                <input
+                                 type="checkbox" 
+                                 name="checkbox"
+                                 v-bind:id="produit.id"
+                                 :value=produit.id
+                                 v-model="liked"
+                                 @click="EnvoiLikeCookie()"
+                                 />
+                                 <label v-bind:for="produit.id" title="Rajouter ce véhicule dans votre liste de souhait !">
+                                     <i class="fas fa-heart"></i>                                     
+                                 </label>
+                            </div>
+                        </div>
+                        <div class="card-icons">
+                            <a class="zoom" v-bind:href="produit.img" target="_blank" title="Ouvrir la photo de ce véhicule dans un autre onglet !">
+                                <i class="fas fa-plus-circle"></i>
+                            </a>
+                        </div>
+
+                        <div class="card-icons add-to-cart">
+                            <button v-on:click="AjouterAuPanier(produit)" title="Commencer la location de ce véhicule !">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--    PANIER    ------------------------------------------------------------------------------------------------->
+            <!--    PANIER    ------------------------------------------------------------------------------------------------->
+            <transition name="panier-animation">
+                <div v-if="panier.length > 0" class="shopping-cart classPanierOuvert" id="shopping-cart">
+                    <h2>Bientôt sur votre Parking :</h2>                    
+                    <transition-group name="item-animation" tag="div" class="item-group"><!-- transition-group pour animer de listes , de base le tag est une span mais ici on veut une div -->  
+                        <div v-for="produit, id in panier" v-bind:key="produit.id" class="item"><!--on rajoute ID, pour lier l'ID au Produit-->
+                            <div class="img-container">
+                                <a v-bind:href="produit.img" target="_blank">
+                                <img v-bind:src="produit.img" alt="" class="img-voiture">
+                                </a>
+                            </div>
+                            <div class="item-description">
+                                <h4>{{ produit.description }}</h4>
+                                <p>{{ produit.prix }} €</p>
+                            </div>
+                            <div class="item-quantity">                                
+                                <p>Nombre d'heures : {{ produit.quantity }} H = {{ produit.quantity * produit.prix }} €</p><!--prix du produit fois la quantité souhaitée-->
+                                <div class="cart-icons">
+                                    <button v-on:click="AjouterAuPanier(produit)" title="Ajouter une heure avec ce véhicule !">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button v-on:click="PanierMoinsUn(produit, id)" title="Supprimer une heure avec ce véhicule !">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button @click="ViderPanier(id)" title="Supprimer toutes les heures avec ce véhicules !">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>                            
+                            </div>
+                        </div>
+                    </transition-group>
+                    <!-- CALCUL TOTAL PANIER----------------------->
+                    <div class="grand-total">
+                        <div class="total">
+                            <p>Nombre d'heures totales : {{ CalculTotalQuantite }} H</p>
+                            <p>Coût total : {{ CalculTotalPanier }} €</p>                            
+                        </div>
+                    </div>
+                    <!-- on vérifie que le panier est sorti ou non-- -->
+                    <button v-on:click="OuvrirPanier()" class="action-panier" title="Voir le parking !">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </button>
+                    <button v-on:click="FermerPanier()" class="action-panier action-panier3" title="Sortir du parking !">
+                        <i class="fas fa-arrow-circle-left"></i>
+                    </button>
+                    <button class="action-panier action-panier2" title="Passer à la location de vos véhicules !">
+                        <i class="fas fa-key"></i>
+                    </button>                  
+                </div>
+            </transition>
+
+        </div>    
+    </script>
+    <script src="VUE\vuePerso.js"></script>
+<!-- FIN CONTAINER APP ------------------------------------------    -->
+</div> 
+</body>
+</html>

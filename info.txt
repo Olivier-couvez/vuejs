@@ -1,0 +1,11 @@
+requete d'une api postman.com
+
+allow cors pluggin chrome
+
+creation site nuxt js vue js  se mettre dans directory parent yarn create nuxt-app themovie
+
+demarrer serveur  yarn dev
+
+ajout axios pour lire facilement des API  yarn add @nuxtjs/axios
+
+lien image tmdb (images film) https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ (( plus le nom dans le champ de l'api ))
